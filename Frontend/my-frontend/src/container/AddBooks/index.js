@@ -81,135 +81,165 @@ const AddBooks = () => {
   };
 
   return (
-    <Box>
-      <Typography
-        sx={{
-          width: "100%",
-          padding: "20px",
-          fontSize: "30px",
-          fontWeight: "bolder",
-          fontFamily: "cursive",
-          backgroundColor: "#7e7e66ff",
-          textAlign: "center",
-        }}
-      >
-        ADD BOOKS
-      </Typography>
-
+    <Box
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        height: "100vh",
+        backgroundColor: "white",
+      }}
+    >
       <Box
         sx={{
+          width: "70%",
+          margin: "20px auto",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           padding: "20px",
+          boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+          borderRadius: "20px",
         }}
       >
-        <TextField
-          type="text"
-          label="Title"
-          name="title"
-          value={formData.title}
-          onChange={changeBookData}
-          required
+        <Typography
           sx={{
-            marginTop: "20px",
-            width: "50%",
-          }}
-        />
-
-        <TextField
-          type="text"
-          label="Author"
-          name="author"
-          value={formData.author}
-          onChange={changeBookData}
-          required
-          sx={{
-            marginTop: "20px",
-            width: "50%",
-          }}
-        />
-
-        <TextField
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={changeBookData}
-          required
-          InputLabelProps={{
-            shrink: true,
-          }}
-          sx={{
-            marginTop: "20px",
-            width: "50%",
-          }}
-        />
-
-        <TextField
-          type="text"
-          label="Genre"
-          name="genre"
-          value={formData.genre}
-          onChange={changeBookData}
-          required
-          sx={{
-            marginTop: "20px",
-            width: "50%",
-          }}
-        />
-
-        <Button
-          variant="contained"
-          component="label"
-          sx={{
-            marginBottom: 1,
-            marginTop: 2,
-            width: "50%",
+            fontSize: "30px",
+            color: "#7e7e66ff",
+            fontWeight: "bolder",
+            fontFamily: "cursive",
+            padding: "20px",
           }}
         >
-          {image ? "Change Book Image" : "Upload Book Image"}
-          <input
-            type="file"
-            hidden
-            onChange={handleBookImage}
-            accept="image/*"
-          />
-        </Button>
+          Add New Book
+        </Typography>
 
-        {/* Show selected image name */}
-        {image && (
-          <Typography sx={{ mt: 1, fontSize: "14px" }}>
-            Selected: {image.name}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "70%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            type="text"
+            label="Title"
+            name="title"
+            value={formData.title}
+            onChange={changeBookData}
+            required
+            sx={{
+              marginTop: "20px",
+              width: "50%",
+            }}
+          />
+
+          <TextField
+            type="text"
+            label="Author"
+            name="author"
+            value={formData.author}
+            onChange={changeBookData}
+            required
+            sx={{
+              marginTop: "20px",
+              width: "50%",
+            }}
+          />
+
+          <TextField
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={changeBookData}
+            required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            sx={{
+              marginTop: "20px",
+              width: "50%",
+            }}
+          />
+
+          <TextField
+            type="text"
+            label="Genre"
+            name="genre"
+            value={formData.genre}
+            onChange={changeBookData}
+            required
+            sx={{
+              marginTop: "20px",
+              width: "50%",
+            }}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "70%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              marginBottom: 1,
+              marginTop: 2,
+              width: "70%",
+            }}
+          >
+            {image ? "Change Book Image" : "Upload Book Image"}
+            <input
+              type="file"
+              hidden
+              onChange={handleBookImage}
+              accept="image/*"
+            />
+          </Button>
+
+          {/* Show selected image name */}
+          {image && (
+            <Typography sx={{ mt: 1, fontSize: "14px" }}>
+              Selected: {image.name}
+            </Typography>
+          )}
+        </Box>
+        {error && (
+          <Typography color="error" sx={{ textAlign: "center", mt: 2 }}>
+            {error}
           </Typography>
         )}
-      </Box>
 
-      {error && (
-        <Typography color="error" sx={{ textAlign: "center", mt: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          disabled={loading}
-          sx={{
-            padding: "15px",
-            backgroundColor: loading ? "#cccccc" : "#7e7e66ff",
-            marginTop: "30px",
-            borderRadius: "20px",
-            color: "black",
-            fontWeight: "bold",
-            fontSize: "15px",
-            "&:hover": {
-              backgroundColor: loading ? "#cccccc" : "#6b6b5a",
-            },
-          }}
-          onClick={handleAddBooks}
+        <Box
+          sx={{ display: "flex", justifyContent: "center", padding: "20px" }}
         >
-          {loading ? "ADDING..." : "SUBMIT"}
-        </Button>
+          <Button
+            disabled={loading}
+            sx={{
+              padding: "15px",
+              backgroundColor: loading ? "#cccccc" : "#7e7e66ff",
+              borderRadius: "18px",
+              color: "white",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: loading ? "#cccccc" : "#6b6b5a",
+              },
+            }}
+            onClick={handleAddBooks}
+          >
+            {loading ? "ADDING..." : "Add Book"}
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
