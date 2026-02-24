@@ -16,6 +16,7 @@ import PasswordIcon from "@mui/icons-material/Password";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import SecurityIcon from "@mui/icons-material/Security";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -48,46 +49,80 @@ const Login = () => {
   };
   return (
     <div className="login" style={{}}>
-      <Box>
-        <h1 style={{ fontSize: "30px", color: "#7e7e66ff" }}>LOGIN PAGE</h1>
-      </Box>
-
       <Box
         sx={{
-          width: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          height: "100vh",
+          backgroundColor: "white",
         }}
       >
-        {error && (
-          <Alert sx={{ width: "50%", marginBottom: "20px" }} severity="error">
-            {error}
-          </Alert>
-        )}
-
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "50%",
+            width: "60%",
+            padding: "20px",
+            // border: "2px solid pink",
+            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+            borderRadius: "10px",
+            // backgroundColor: "#ebe2e2",
           }}
         >
-          <TextField
-            label="Email Address"
-            type="email"
-            onChange={(text) => setEmail(text.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon sx={{ marginRight: "10px" }} />
-                </InputAdornment>
-              ),
-            }}
-          ></TextField>
+          <Box sx={{ pb: 3 }}>
+            <Typography
+              style={{
+                fontSize: "35px",
+                fontWeight: "bolder",
+                color: "#7e7e66ff",
+              }}
+            >
+              <SecurityIcon
+                sx={{ fontSize: "30px", color: "#7e7e66ff", pr: 2 }}
+              />
+              Sign In
+            </Typography>
+          </Box>
 
-          {/* <Typography
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {error && (
+              <Alert
+                sx={{ width: "50%", marginBottom: "20px" }}
+                severity="error"
+              >
+                {error}
+              </Alert>
+            )}
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "50%",
+              }}
+            >
+              <TextField
+                label="Email Address"
+                type="email"
+                onChange={(text) => setEmail(text.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon sx={{ marginRight: "10px" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              ></TextField>
+
+              {/* <Typography
           style={{
             width: "100%",
             fontSize: "20px",
@@ -97,50 +132,53 @@ const Login = () => {
         >
           Password
         </Typography> */}
-          <TextField
-            type={showPassword ? "text" : "password"}
-            label="Password"
-            onChange={(text) => setPassword(text.target.value)}
-            style={{ marginTop: "20px" }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockIcon sx={{ marginRight: "10px" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button
-                    onClick={() => {
-                      setshowPassword(!showPassword);
-                    }}
-                  >
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </Button>
-                </InputAdornment>
-              ),
-            }}
-          ></TextField>
+              <TextField
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                onChange={(text) => setPassword(text.target.value)}
+                style={{ marginTop: "20px" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon sx={{ marginRight: "10px" }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button
+                        onClick={() => {
+                          setshowPassword(!showPassword);
+                        }}
+                      >
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </Button>
+                    </InputAdornment>
+                  ),
+                }}
+              ></TextField>
+            </Box>
+          </Box>
+          <Box>
+            <button
+              style={{
+                fontSize: "15px",
+                fontWeight: "bold",
+                borderRadius: 20,
+                marginTop: 15,
+                width: "30%",
+                padding: 10,
+                backgroundColor: "#7e7e66ff",
+              }}
+              onClick={handleSubmit}
+            >
+              Sign In
+            </button>
+          </Box>
         </Box>
-      </Box>
-      <Box>
-        <button
-          style={{
-            fontSize: "15px",
-            fontWeight: "bold",
-            color: "white",
-            borderRadius: 20,
-            marginTop: 15,
-            paddingLeft: 30,
-            paddingRight: 30,
-            paddingTop: 20,
-            paddingBottom: 20,
-            backgroundColor: "#7e7e66ff",
-          }}
-          onClick={handleSubmit}
-        >
-          LOGIN
-        </button>
       </Box>
     </div>
   );

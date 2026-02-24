@@ -20,6 +20,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import AccessibilityNewSharpIcon from "@mui/icons-material/AccessibilityNewSharp";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -105,143 +106,173 @@ const SignUp = () => {
 
   return (
     <div className="App">
-      <Box>
-        <h1
-          style={{
-            fontSize: 35,
-            fontWeight: "bold",
-            color: "#7e7e66ff",
-          }}
-        >
-          SIGNUP PAGE
-        </h1>
-      </Box>
-
       <Box
         style={{
+          height: "100vh",
+          backgroundColor: "white",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          textAlign: "center",
+          alignItems: "center",
         }}
       >
-        {error && (
-          <Alert sx={{ width: "50%", marginBottom: "20px" }} severity="error">
-            {error}
-          </Alert>
-        )}
-
-        <TextField
-          type="text"
-          label="Name"
-          onChange={(text) => setName(text.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <DnsIcon />
-              </InputAdornment>
-            ),
+        <Box
+          sx={{
+            width: "70%",
+            padding: "20px",
+            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+            borderRadius: "30px",
           }}
-          sx={{ marginTop: "20px", width: "50%" }}
         >
-          Name
-        </TextField>
+          <Box>
+            <Typography>
+              <h1
+                style={{
+                  fontSize: 35,
+                  fontWeight: "bolder",
+                  color: "#7e7e66ff",
+                }}
+              >
+                <AccessibilityNewSharpIcon
+                  sx={{ fontSize: "30px", color: "#7e7e66ff", pr: 2 }}
+                />
+                Sign Up
+              </h1>
+            </Typography>
+          </Box>
 
-        <TextField
-          type="text"
-          label="Username"
-          onChange={(text) => setuserName(text.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <PersonIcon />
-              </InputAdornment>
-            ),
-          }}
-          sx={{ marginTop: "20px", width: "50%" }}
-        >
-          UserName
-        </TextField>
+          <Box
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            {error && (
+              <Alert
+                sx={{ width: "50%", marginBottom: "20px" }}
+                severity="error"
+              >
+                {error}
+              </Alert>
+            )}
 
-        <TextField
-          type="tel"
-          label="PhoneNumber"
-          onChange={(text) => setPhoneNumber(text.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <ContactsIcon />
-              </InputAdornment>
-            ),
-          }}
-          sx={{ marginTop: "20px", width: "50%" }}
-        >
-          PhoneNumber
-        </TextField>
+            <TextField
+              type="text"
+              label="Name"
+              onChange={(text) => setName(text.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <DnsIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ marginTop: "20px", width: "50%",}}
+            >
+              Name
+            </TextField>
 
-        <TextField
-          type="email"
-          label="Email"
-          onChange={(text) => setEmail(text.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <EmailIcon />
-              </InputAdornment>
-            ),
-          }}
-          sx={{ marginTop: "20px", width: "50%" }}
-        >
-          E-mail
-        </TextField>
+            <TextField
+              type="text"
+              label="Username"
+              onChange={(text) => setuserName(text.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ marginTop: "20px", width: "50%" }}
+            >
+              UserName
+            </TextField>
 
-        <TextField
-          type={showPassword ? "text" : "password"}
-          label="Password"
-          onChange={(text) => setPassword(text.target.value)}
-          style={{ marginTop: "20px", width: "50%" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LockIcon />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <Button
-                  onClick={() => {
-                    setshowPassword(!showPassword);
-                  }}
-                >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </Button>
-              </InputAdornment>
-            ),
-          }}
-        ></TextField>
-      </Box>
+            <TextField
+              type="tel"
+              label="PhoneNumber"
+              onChange={(text) => setPhoneNumber(text.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ContactsIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ marginTop: "20px", width: "50%" }}
+            >
+              PhoneNumber
+            </TextField>
 
-      <Box>
-        <Button
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            color: "white",
-            textAlign: "left",
-            paddingLeft: 20,
-            paddingRight: 20,
-            borderRadius: 20,
-            backgroundColor: "#7e7e66ff",
-            marginTop: 15,
-          }}
-          onClick={handleRegistration}
-        >
-          SIGNUP
-        </Button>
-      </Box>
+            <TextField
+              type="email"
+              label="Email"
+              onChange={(text) => setEmail(text.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ marginTop: "20px", width: "50%" }}
+            >
+              E-mail
+            </TextField>
 
-      {/* <header className="App-header">
+            <TextField
+              type={showPassword ? "text" : "password"}
+              label="Password"
+              onChange={(text) => setPassword(text.target.value)}
+              style={{ marginTop: "20px", width: "50%" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Button
+                      onClick={() => {
+                        setshowPassword(!showPassword);
+                      }}
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </Button>
+                  </InputAdornment>
+                ),
+              }}
+            ></TextField>
+          </Box>
+
+          <Box>
+            <Button
+              variant="contained"
+              sx={{
+                marginTop: "30px",
+                backgroundColor: "#7e7e66ff",
+                color: "white",
+                fontSize: "15px",
+                borderRadius: "20px",
+                padding: "10px 30px",
+              }}
+              onClick={handleRegistration}
+            >
+              Sign Up
+            </Button>
+          </Box>
+        </Box>
+
+        {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -255,6 +286,7 @@ const SignUp = () => {
           Learn React Today
         </a>
       </header> */}
+      </Box>
     </div>
   );
 };

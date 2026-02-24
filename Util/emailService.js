@@ -11,6 +11,8 @@ const createTransporter = () => {
         auth: {
             user: "rotneng@gmail.com",
             pass: "xmqyewamsirsaeyo"
+            //  user: process.env.EMAIL_USER,
+            // pass: process.env.EMAIL_PASS,
         }
     })
 }
