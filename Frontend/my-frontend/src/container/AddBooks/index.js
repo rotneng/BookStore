@@ -1,3 +1,4 @@
+import React, { useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -9,7 +10,6 @@ import {
   InputAdornment,
   Alert,
 } from "@mui/material";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addBooks } from "../../Actions/book.action";
@@ -21,23 +21,26 @@ import EventIcon from "@mui/icons-material/Event";
 import CategoryIcon from "@mui/icons-material/Category";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"; // New Import
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 const AddBooks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null); // Reference for the hidden file input
+
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
     date: "",
     genre: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const handleAddBooks = async () => {
+    // Basic Validation
     if (
       !formData.title ||
       !formData.author ||
@@ -63,8 +66,12 @@ const AddBooks = () => {
       });
       formDataToSend.append("image", image);
 
-      await dispatch(addBooks(formDataToSend, navigate));
-    } catch (error) {
+      // Dispatch action and wait for completion
+      await dispatch(addBooks(formDataToSend));
+
+      // Navigate to Library on success
+      navigate("/getBooks");
+    } catch (err) {
       setError("Failed to add book. Please try again.");
     } finally {
       setLoading(false);
@@ -89,6 +96,11 @@ const AddBooks = () => {
     }
   };
 
+  // Triggers the hidden file input
+  const triggerUpload = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <Box
       sx={{
@@ -110,10 +122,10 @@ const AddBooks = () => {
           border: "1px solid #e0e0e0",
           background: "rgba(255, 255, 255, 0.9)",
           backdropFilter: "blur(10px)",
-          position: "relative", // Required for positioning the back button
+          position: "relative",
         }}
       >
-        {/* Back to Home Button */}
+        {/* Back Button */}
         <Button
           startIcon={
             <ArrowBackIosNewIcon sx={{ fontSize: "14px !important" }} />
@@ -128,7 +140,6 @@ const AddBooks = () => {
             textTransform: "none",
             "&:hover": {
               backgroundColor: "transparent",
-              color: "#6a6a56",
               textDecoration: "underline",
             },
           }}
@@ -137,7 +148,7 @@ const AddBooks = () => {
         </Button>
 
         {/* Header */}
-        <Box sx={{ textAlign: "center", mb: 4, mt: { xs: 4, md: 0 } }}>
+        <Box sx={{ textAlign: "center", mb: 4, mt: { xs: 6, md: 0 } }}>
           <AutoStoriesIcon sx={{ fontSize: 48, color: "#7e7e66", mb: 1 }} />
           <Typography
             variant="h4"
@@ -146,7 +157,7 @@ const AddBooks = () => {
             Add New Book
           </Typography>
           <Typography variant="body2" sx={{ color: "#757575" }}>
-            Fill in the details to expand the library
+            Contribute to the collective wisdom
           </Typography>
         </Box>
 
@@ -163,7 +174,7 @@ const AddBooks = () => {
             gap: 4,
           }}
         >
-          {/* Form Side */}
+          {/* Inputs Section */}
           <Box
             sx={{ flex: 2, display: "flex", flexDirection: "column", gap: 2.5 }}
           >
@@ -181,7 +192,6 @@ const AddBooks = () => {
                 ),
               }}
             />
-
             <TextField
               fullWidth
               label="Author Name"
@@ -196,7 +206,6 @@ const AddBooks = () => {
                 ),
               }}
             />
-
             <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
                 fullWidth
@@ -231,20 +240,20 @@ const AddBooks = () => {
             </Box>
           </Box>
 
-          {/* Image Upload Side */}
+          {/* Image Upload Section */}
           <Box
             sx={{
               flex: 1,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
             }}
           >
             <Box
+              onClick={triggerUpload}
               sx={{
                 width: "100%",
-                height: 220,
+                height: 250,
                 borderRadius: "16px",
                 border: "2px dashed #7e7e66",
                 display: "flex",
@@ -253,6 +262,12 @@ const AddBooks = () => {
                 overflow: "hidden",
                 position: "relative",
                 backgroundColor: "#fafafa",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#f0f0e8",
+                  borderColor: "#6a6a56",
+                },
               }}
             >
               {preview ? (
@@ -273,9 +288,10 @@ const AddBooks = () => {
                       top: 8,
                       right: 8,
                       backgroundColor: "white",
-                      "&:hover": { backgroundColor: "#ffeb3b" },
+                      "&:hover": { backgroundColor: "#f5f5f5" },
                     }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevents clicking the box again when deleting
                       setImage(null);
                       setPreview(null);
                     }}
@@ -288,29 +304,28 @@ const AddBooks = () => {
                   <CloudUploadIcon
                     sx={{ fontSize: 40, color: "#7e7e66", mb: 1 }}
                   />
-                  <Typography variant="caption" display="block">
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    sx={{ fontWeight: 600 }}
+                  >
                     Click to upload cover
                   </Typography>
                 </Box>
               )}
-              <input
-                type="file"
-                hidden
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  opacity: 0,
-                  cursor: "pointer",
-                }}
-                onChange={handleBookImage}
-                accept="image/*"
-              />
             </Box>
+            <input
+              type="file"
+              ref={fileInputRef}
+              hidden
+              onChange={handleBookImage}
+              accept="image/*"
+            />
           </Box>
         </Box>
 
-        <Box sx={{ mt: 5, textAlign: "center" }}>
+        {/* Submit Button */}
+        <Box sx={{ mt: 5 }}>
           <Button
             fullWidth
             variant="contained"

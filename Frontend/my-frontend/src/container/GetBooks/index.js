@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { deleteBooks, getBooks } from "../../Actions/book.action";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react"; // Added useState
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Icons
@@ -23,28 +23,30 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import SearchIcon from "@mui/icons-material/Search"; // Added Search Icon
+import SearchIcon from "@mui/icons-material/Search";
 
 const GetBooks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { book } = useSelector((state) => state.book);
 
-  // Local state for search query
+  // Safeguard 1: Default to empty array if state is undefined
+  const { book = [] } = useSelector((state) => state.book);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     dispatch(getBooks());
   }, [dispatch]);
 
-  // Filtering Logic
-  const filteredBooks = book?.filter((b) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      b.title?.toLowerCase().includes(query) ||
-      b.author?.toLowerCase().includes(query)
-    );
-  });
+  // Safeguard 2: Explicitly check for Array to prevent .filter crash
+  const filteredBooks = Array.isArray(book)
+    ? book.filter((b) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          b.title?.toLowerCase().includes(query) ||
+          b.author?.toLowerCase().includes(query)
+        );
+      })
+    : [];
 
   const handleEditBooks = (allBooks) => {
     if (!allBooks?._id) return;
@@ -90,11 +92,11 @@ const GetBooks = () => {
               fontWeight: 900,
               mb: 1,
               textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
+              fontSize: { xs: "2.5rem", md: "3.75rem" },
             }}
           >
             The Collective Gallery
           </Typography>
-
           <Box
             sx={{
               width: 80,
@@ -105,8 +107,6 @@ const GetBooks = () => {
               mb: 4,
             }}
           />
-
-          {/* Search Bar Integration */}
           <TextField
             variant="outlined"
             placeholder="Search by title or author..."
@@ -135,15 +135,34 @@ const GetBooks = () => {
 
       <Container maxWidth="lg">
         {filteredBooks && filteredBooks.length > 0 ? (
-          <Grid container spacing={4} sx={{ justifyContent: "center" }}>
+          <Grid
+            container
+            spacing={4}
+            // Fix 1: Force fixed layout for the grid container
+            sx={{ width: "100%", margin: 0, tableLayout: "fixed" }}
+          >
             {filteredBooks.map((allBooks) => (
-              <Grid item xs={12} sm={6} md={4} key={allBooks._id}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={allBooks._id}
+                sx={{
+                  display: "flex",
+                  // Fix 2: Force exact column percentage
+                  maxWidth: { xs: "100%", sm: "50%", md: "33.33%" },
+                }}
+              >
                 <Card
                   sx={{
-                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
+                    width: "100%",
+                    // Fix 3: Prevent card from expanding due to long text
+                    minWidth: 0,
                     borderRadius: "20px",
+                    overflow: "hidden",
                     transition: "transform 0.3s, boxShadow 0.3s",
                     "&:hover": {
                       transform: "translateY(-8px)",
@@ -153,20 +172,26 @@ const GetBooks = () => {
                 >
                   <CardMedia
                     component="img"
-                    sx={{ height: 280, objectFit: "cover" }}
+                    sx={{
+                      height: 280,
+                      width: "100%",
+                      objectFit: "cover",
+                    }}
                     image={allBooks.image}
                     alt={allBooks.title}
                   />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        mb: 1,
-                      }}
-                    >
+                  <CardContent
+                    sx={{
+                      flexGrow: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      padding: 2,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Box sx={{ mb: 1 }}>
                       <Chip
-                        label={allBooks.genre}
+                        label={allBooks.genre || "General"}
                         size="small"
                         sx={{
                           backgroundColor: "#7e7e6622",
@@ -175,37 +200,74 @@ const GetBooks = () => {
                         }}
                       />
                     </Box>
+
                     <Typography
-                      gutterBottom
-                      variant="h5"
-                      sx={{ fontWeight: 800 }}
+                      variant="h6"
+                      sx={{
+                        fontWeight: 800,
+                        lineHeight: 1.3,
+                        mb: 2,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        minHeight: "2.6em",
+                        // Fix 4: Force word wrap for long titles
+                        wordBreak: "break-word",
+                      }}
                     >
                       {allBooks.title}
                     </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        color: "text.secondary",
-                        mb: 0.5,
-                      }}
-                    >
-                      <AutoStoriesIcon sx={{ fontSize: 18, mr: 1 }} />
-                      <Typography variant="body2">{allBooks.author}</Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        color: "text.secondary",
-                      }}
-                    >
-                      <CalendarMonthIcon sx={{ fontSize: 18, mr: 1 }} />
-                      <Typography variant="body2">{allBooks.date}</Typography>
+
+                    <Box sx={{ mt: "auto" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: "text.secondary",
+                          mb: 0.5,
+                        }}
+                      >
+                        <AutoStoriesIcon
+                          sx={{ fontSize: 16, mr: 1, flexShrink: 0 }}
+                        />
+                        <Typography
+                          variant="body2"
+                          noWrap
+                          sx={{
+                            width: "100%",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {allBooks.author}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: "text.secondary",
+                        }}
+                      >
+                        <CalendarMonthIcon
+                          sx={{ fontSize: 16, mr: 1, flexShrink: 0 }}
+                        />
+                        <Typography variant="body2">
+                          {allBooks.date
+                            ? new Date(allBooks.date).toLocaleDateString()
+                            : "N/A"}
+                        </Typography>
+                      </Box>
                     </Box>
                   </CardContent>
+
                   <Divider />
-                  <CardActions sx={{ justifyContent: "space-between", p: 2 }}>
+
+                  <CardActions
+                    sx={{ justifyContent: "space-between", px: 2, py: 1.5 }}
+                  >
                     <Button
                       size="small"
                       startIcon={<EditIcon />}
