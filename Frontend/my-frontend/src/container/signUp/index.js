@@ -7,20 +7,22 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  Paper,
 } from "@mui/material";
-import { pink } from "@mui/material/colors";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../../Actions/auth.action";
-import DnsIcon from "@mui/icons-material/Dns";
-import PersonIcon from "@mui/icons-material/Person";
-import ContactsIcon from "@mui/icons-material/Contacts";
-import EmailIcon from "@mui/icons-material/Email";
-import LockIcon from "@mui/icons-material/Lock";
+
+// Finer Icon Selections
+import HubIcon from "@mui/icons-material/Hub";
+import FaceRetouchingNaturalIcon from "@mui/icons-material/FaceRetouchingNatural";
+import BadgeIcon from "@mui/icons-material/Badge";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import AccessibilityNewSharpIcon from "@mui/icons-material/AccessibilityNewSharp";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -32,262 +34,176 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setshowPassword] = useState(false);
   const [error, setError] = useState("");
-  // console.log("Name", name);
-  // const form = new FormData()
+
   const handleRegistration = async () => {
-    // if (!Name || !userName || !phoneNumber || !email || !password) {
-    // alert("Please fill in all fields before submitting.");
-    if (!Name) {
-      setError("Name is required", error);
-      return;
-    }
-    if (!userName) {
-      setError("Username is required");
-      return;
-    }
-    if (!phoneNumber) {
-      setError("PhoneNumber is required");
-      return;
-    }
-    if (!email) {
-      setError("Email is required");
-      return;
-    }
+    if (!Name) return setError("Name is required");
+    if (!userName) return setError("Username is required");
+    if (!phoneNumber) return setError("PhoneNumber is required");
+    if (!email) return setError("Email is required");
     if (password) {
-      if (password.length < 8) {
-        setError("Password should be at least 8 digits");
-      }
+      if (password.length < 8)
+        return setError("Password should be at least 8 digits");
     } else {
-      setError("Password is required");
+      return setError("Password is required");
     }
-    console.log("error message", error);
 
     try {
-      const user = {
-        Name: Name,
-        userName: userName,
-        phoneNumber: phoneNumber,
-        email: email,
-        password: password,
-      };
-      console.log("user info", user);
-
+      const user = { Name, userName, phoneNumber, email, password };
       await dispatch(signUp(user, navigate));
     } catch (error) {
       console.log("error in Sign Up");
     }
-    // try{
-    //   const user = {
-    //     Name:Name,
-    //     userName: userName,
-    //     phoneNumber: phoneNumber,
-    //     email: email,
-    //     password: password
-    //   }
-    //   console.log("button clicked");
-    //   // const form = new FormData()
-    //   // form.append("name", name)
-    //   // form.append("userName", userName)
-    //   // form.append("phoneNumber", phoneNumber)
-    //   // form.append("email", email)
-    //   // form.append("password", password)
-    //   console.log("form data loaded", user);
-    //   const response = await axios.post("http://localhost:3001/auth/signUp", user)
-    //   if (response.status == 201){
-    //     console.log("response shown", response.data);
-    //     window.location.href = "/login"
-    //   } else{
-    //     console.log("response not shown");
-    //   }
-    // }catch(e) {
-    //   console.log("there was an error", e)
-    // }
   };
 
   return (
-    <div className="App">
-      <Box
-        style={{
-          height: "100vh",
-          backgroundColor: "white",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          alignItems: "center",
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#f4f7f6",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        p: 2,
+      }}
+    >
+      <Paper
+        elevation={0}
+        sx={{
+          width: "100%",
+          maxWidth: 500,
+          padding: { xs: 4, md: 6 },
+          borderRadius: "32px",
+          textAlign: "center",
+          border: "1px solid #e0e0e0", // Clean subtle border
+          background: "rgba(255, 255, 255, 0.9)",
+          backdropFilter: "blur(10px)",
         }}
       >
-        <Box
-          sx={{
-            width: "70%",
-            padding: "20px",
-            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
-            borderRadius: "30px",
-          }}
-        >
-          <Box>
-            <Typography>
-              <h1
-                style={{
-                  fontSize: 35,
-                  fontWeight: "bolder",
-                  color: "#7e7e66ff",
-                }}
-              >
-                <AccessibilityNewSharpIcon
-                  sx={{ fontSize: "30px", color: "#7e7e66ff", pr: 2 }}
-                />
-                Sign Up
-              </h1>
-            </Typography>
-          </Box>
-
-          <Box
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-            }}
+        {/* Header Icon & Title */}
+        <Box sx={{ mb: 4 }}>
+          <HubIcon sx={{ fontSize: 48, color: "#7e7e66", mb: 1 }} />
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 900, color: "#424242", letterSpacing: "-1px" }}
           >
-            {error && (
-              <Alert
-                sx={{ width: "50%", marginBottom: "20px" }}
-                severity="error"
-              >
-                {error}
-              </Alert>
-            )}
-
-            <TextField
-              type="text"
-              label="Name"
-              onChange={(text) => setName(text.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <DnsIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ marginTop: "20px", width: "50%",}}
-            >
-              Name
-            </TextField>
-
-            <TextField
-              type="text"
-              label="Username"
-              onChange={(text) => setuserName(text.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PersonIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ marginTop: "20px", width: "50%" }}
-            >
-              UserName
-            </TextField>
-
-            <TextField
-              type="tel"
-              label="PhoneNumber"
-              onChange={(text) => setPhoneNumber(text.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <ContactsIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ marginTop: "20px", width: "50%" }}
-            >
-              PhoneNumber
-            </TextField>
-
-            <TextField
-              type="email"
-              label="Email"
-              onChange={(text) => setEmail(text.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ marginTop: "20px", width: "50%" }}
-            >
-              E-mail
-            </TextField>
-
-            <TextField
-              type={showPassword ? "text" : "password"}
-              label="Password"
-              onChange={(text) => setPassword(text.target.value)}
-              style={{ marginTop: "20px", width: "50%" }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Button
-                      onClick={() => {
-                        setshowPassword(!showPassword);
-                      }}
-                    >
-                      {showPassword ? (
-                        <VisibilityOffIcon />
-                      ) : (
-                        <VisibilityIcon />
-                      )}
-                    </Button>
-                  </InputAdornment>
-                ),
-              }}
-            ></TextField>
-          </Box>
-
-          <Box>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "30px",
-                backgroundColor: "#7e7e66ff",
-                color: "white",
-                fontSize: "15px",
-                borderRadius: "20px",
-                padding: "10px 30px",
-              }}
-              onClick={handleRegistration}
-            >
-              Sign Up
-            </Button>
-          </Box>
+            Create Account
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#757575", mt: 1 }}>
+            Join our community today
+          </Typography>
         </Box>
 
-        {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React Today
-        </a>
-      </header> */}
-      </Box>
-    </div>
+        {error && (
+          <Alert severity="error" sx={{ mb: 3, borderRadius: "12px" }}>
+            {error}
+          </Alert>
+        )}
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+          <TextField
+            fullWidth
+            label="Full Name"
+            onChange={(e) => setName(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FaceRetouchingNaturalIcon
+                    sx={{ color: "#7e7e66", fontSize: 22 }}
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label="Username"
+            onChange={(e) => setuserName(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <BadgeIcon sx={{ color: "#7e7e66", fontSize: 22 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label="Phone Number"
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LocalPhoneIcon sx={{ color: "#7e7e66", fontSize: 22 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label="Email"
+            onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AlternateEmailIcon sx={{ color: "#7e7e66", fontSize: 22 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            fullWidth
+            type={showPassword ? "text" : "password"}
+            label="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FingerprintIcon sx={{ color: "#7e7e66", fontSize: 22 }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setshowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleRegistration}
+            startIcon={<AppRegistrationIcon />}
+            sx={{
+              mt: 2,
+              backgroundColor: "#7e7e66",
+              color: "white",
+              fontSize: "1rem",
+              fontWeight: 700,
+              borderRadius: "16px",
+              py: 1.8,
+              textTransform: "none",
+              boxShadow: "0 8px 16px -4px rgba(126, 126, 102, 0.3)",
+              "&:hover": {
+                backgroundColor: "#6a6a56",
+                boxShadow: "0 12px 20px -4px rgba(126, 126, 102, 0.4)",
+              },
+            }}
+          >
+            Register Now
+          </Button>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

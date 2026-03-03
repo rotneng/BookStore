@@ -5,18 +5,21 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  IconButton,
+  Paper,
 } from "@mui/material";
 import { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../Actions/auth.action";
-import { useNavigate, useNavigation } from "react-router-dom";
-import EmailIcon from "@mui/icons-material/Email";
-import PasswordIcon from "@mui/icons-material/Password";
-import LockIcon from "@mui/icons-material/Lock";
+import { useNavigate } from "react-router-dom";
+
+// Finer Icon Selections
+import HubIcon from "@mui/icons-material/Hub";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import SecurityIcon from "@mui/icons-material/Security";
+import LoginIcon from "@mui/icons-material/Login";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -28,159 +31,156 @@ const Login = () => {
 
   const handleSubmit = async () => {
     try {
-      const user = {
-        email: email,
-        password: password,
-      };
+      const user = { email, password };
+
       if (!email && !password) {
-        setError("Fill all required Feilds");
+        return setError("Fill all required Fields");
       }
       if (email && !password) {
-        setError("Password is required");
+        return setError("Password is required");
       }
       if (!email && password) {
-        setError("Email is required");
+        return setError("Email is required");
       }
+
       await dispatch(login(user, navigate));
     } catch (err) {
-      setError("unable to login");
+      setError("Unable to login");
       console.log("error in Login");
     }
   };
+
   return (
-    <div className="login" style={{}}>
-      <Box
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        backgroundColor: "#f4f7f6", // Matching SignUp background
+        p: 2,
+      }}
+    >
+      <Paper
+        elevation={0}
         sx={{
+          width: "100%",
+          maxWidth: 450,
+          padding: { xs: 4, md: 6 },
+          borderRadius: "32px",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           flexDirection: "column",
-          height: "100vh",
-          backgroundColor: "white",
+          alignItems: "center",
+          border: "1px solid #e0e0e0",
+          background: "rgba(255, 255, 255, 0.9)",
+          backdropFilter: "blur(10px)",
         }}
       >
-        <Box
-          sx={{
-            width: "60%",
-            padding: "20px",
-            // border: "2px solid pink",
-            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
-            borderRadius: "10px",
-            // backgroundColor: "#ebe2e2",
-          }}
-        >
-          <Box sx={{ pb: 3 }}>
-            <Typography
-              style={{
-                fontSize: "35px",
-                fontWeight: "bolder",
-                color: "#7e7e66ff",
-              }}
-            >
-              <SecurityIcon
-                sx={{ fontSize: "30px", color: "#7e7e66ff", pr: 2 }}
-              />
-              Sign In
-            </Typography>
-          </Box>
-
-          <Box
+        {/* Header Section */}
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <HubIcon sx={{ fontSize: 48, color: "#7e7e66", mb: 1 }} />
+          <Typography
+            variant="h4"
             sx={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
+              fontWeight: 900,
+              color: "#424242",
+              letterSpacing: "-1px",
             }}
           >
-            {error && (
-              <Alert
-                sx={{ width: "50%", marginBottom: "20px" }}
-                severity="error"
-              >
-                {error}
-              </Alert>
-            )}
+            Welcome Back
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#757575", mt: 1 }}>
+            Please enter your details to sign in
+          </Typography>
+        </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "50%",
-              }}
-            >
-              <TextField
-                label="Email Address"
-                type="email"
-                onChange={(text) => setEmail(text.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon sx={{ marginRight: "10px" }} />
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
+        {/* Error Message */}
+        {error && (
+          <Alert
+            severity="error"
+            sx={{ width: "100%", mb: 3, borderRadius: "12px" }}
+          >
+            {error}
+          </Alert>
+        )}
 
-              {/* <Typography
-          style={{
+        {/* Form Fields */}
+        <Box
+          sx={{
             width: "100%",
-            fontSize: "20px",
-            fontWeight: "bold",
-            color: "#141e74ff",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2.5,
           }}
         >
-          Password
-        </Typography> */}
-              <TextField
-                type={showPassword ? "text" : "password"}
-                label="Password"
-                onChange={(text) => setPassword(text.target.value)}
-                style={{ marginTop: "20px" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon sx={{ marginRight: "10px" }} />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Button
-                        onClick={() => {
-                          setshowPassword(!showPassword);
-                        }}
-                      >
-                        {showPassword ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </Button>
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
-            </Box>
-          </Box>
-          <Box>
-            <button
-              style={{
-                fontSize: "15px",
-                fontWeight: "bold",
-                borderRadius: 20,
-                marginTop: 15,
-                width: "30%",
-                padding: 10,
-                backgroundColor: "#7e7e66ff",
-              }}
-              onClick={handleSubmit}
-            >
-              Sign In
-            </button>
-          </Box>
+          <TextField
+            fullWidth
+            label="Email Address"
+            variant="outlined"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AlternateEmailIcon sx={{ color: "#7e7e66", fontSize: 22 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label="Password"
+            variant="outlined"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FingerprintIcon sx={{ color: "#7e7e66", fontSize: 22 }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setshowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Button
+            fullWidth
+            variant="contained"
+            size="large"
+            onClick={handleSubmit}
+            startIcon={<LoginIcon />}
+            sx={{
+              mt: 2,
+              py: 1.8,
+              fontSize: "1rem",
+              fontWeight: 700,
+              borderRadius: "16px",
+              backgroundColor: "#7e7e66",
+              textTransform: "none",
+              boxShadow: "0 8px 16px -4px rgba(126, 126, 102, 0.3)",
+              "&:hover": {
+                backgroundColor: "#6a6a56",
+                boxShadow: "0 12px 20px -4px rgba(126, 126, 102, 0.4)",
+              },
+            }}
+          >
+            Sign In
+          </Button>
         </Box>
-      </Box>
-    </div>
+      </Paper>
+    </Box>
   );
 };
 
