@@ -10,46 +10,50 @@ import {
   Container,
   Divider,
   Chip,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { deleteBooks, getBooks } from "../../Actions/book.action";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react"; // Added useState
 import { useNavigate } from "react-router-dom";
 
-// Finer Icon Selections
+// Icons
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import SearchIcon from "@mui/icons-material/Search"; // Added Search Icon
 
 const GetBooks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { book } = useSelector((state) => state.book);
 
+  // Local state for search query
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     dispatch(getBooks());
   }, [dispatch]);
 
+  // Filtering Logic
+  const filteredBooks = book?.filter((b) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      b.title?.toLowerCase().includes(query) ||
+      b.author?.toLowerCase().includes(query)
+    );
+  });
+
   const handleEditBooks = (allBooks) => {
-    // Add a log to see if this is triggered in your browser console
-    console.log("Edit clicked for:", allBooks.title);
-
-    if (!allBooks?._id) {
-      console.error("No book ID found!");
-      return;
-    }
-
+    if (!allBooks?._id) return;
     navigate("/editBooks", {
-      state: {
-        allBooks: allBooks,
-        returnTo: "/getBooks",
-      },
+      state: { allBooks: allBooks, returnTo: "/getBooks" },
     });
   };
 
   const handleDeleteBooks = async (allBooks) => {
-    // A quick confirm dialog is a "finer" touch to prevent accidental deletes
     if (
       window.confirm(`Are you sure you want to delete "${allBooks.title}"?`)
     ) {
@@ -62,7 +66,7 @@ const GetBooks = () => {
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fdfdfc", pb: 5 }}>
-      {/* Refined Header Banner */}
+      {/* Header Banner */}
       <Box
         sx={{
           background: "linear-gradient(135deg, #7e7e66 0%, #5e5e4d 100%)",
@@ -72,11 +76,9 @@ const GetBooks = () => {
           textAlign: "center",
           mb: 6,
           boxShadow: "0px 10px 30px rgba(0,0,0,0.15)",
-          position: "relative",
-          overflow: "hidden",
-          justifyContent: "center",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Container maxWidth="md">
@@ -93,7 +95,6 @@ const GetBooks = () => {
             The Collective Gallery
           </Typography>
 
-          {/* Decorative Divider */}
           <Box
             sx={{
               width: 80,
@@ -101,35 +102,41 @@ const GetBooks = () => {
               backgroundColor: "rgba(255,255,255,0.3)",
               mx: "auto",
               borderRadius: "2px",
-              mb: 2,
+              mb: 4,
             }}
           />
 
-          <Typography
-            variant="h6"
+          {/* Search Bar Integration */}
+          <TextField
+            variant="outlined"
+            placeholder="Search by title or author..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             sx={{
-              opacity: 0.9,
-              fontWeight: 400,
-              letterSpacing: "0.5px",
-              fontStyle: "italic",
+              width: "100%",
+              maxWidth: "500px",
+              backgroundColor: "white",
+              borderRadius: "50px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "50px",
+                "& fieldset": { border: "none" },
+              },
             }}
-          >
-            Browse and manage your personal curation of literature
-          </Typography>
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#7e7e66" }} />
+                </InputAdornment>
+              ),
+            }}
+          />
         </Container>
       </Box>
 
       <Container maxWidth="lg">
-        {/* ... the rest of your Grid and Map logic remains exactly the same ... */}
-        {book && book.length > 0 ? (
-          <Grid
-            container
-            spacing={4}
-            sx={{
-              justifyContent: "center",
-            }}
-          >
-            {book.map((allBooks) => (
+        {filteredBooks && filteredBooks.length > 0 ? (
+          <Grid container spacing={4} sx={{ justifyContent: "center" }}>
+            {filteredBooks.map((allBooks) => (
               <Grid item xs={12} sm={6} md={4} key={allBooks._id}>
                 <Card
                   sx={{
@@ -171,7 +178,6 @@ const GetBooks = () => {
                     <Typography
                       gutterBottom
                       variant="h5"
-                      component="h2"
                       sx={{ fontWeight: 800 }}
                     >
                       {allBooks.title}
@@ -228,15 +234,10 @@ const GetBooks = () => {
               variant="h5"
               sx={{ color: "#7e7e66", fontFamily: "cursive" }}
             >
-              No books available in the library yet.
+              {searchQuery
+                ? "No matching books found."
+                : "No books available in the library yet."}
             </Typography>
-            <Button
-              variant="contained"
-              sx={{ mt: 2, backgroundColor: "#7e7e66", borderRadius: "20px" }}
-              onClick={() => navigate("/addBooks")}
-            >
-              Add Your First Book
-            </Button>
           </Box>
         )}
       </Container>

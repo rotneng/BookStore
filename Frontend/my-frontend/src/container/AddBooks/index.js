@@ -14,20 +14,21 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addBooks } from "../../Actions/book.action";
 
-// Finer Icon Selections
+// Icons
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import EventIcon from "@mui/icons-material/Event";
 import CategoryIcon from "@mui/icons-material/Category";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"; // New Import
 
 const AddBooks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null); // For immediate visual feedback
+  const [preview, setPreview] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -83,7 +84,7 @@ const AddBooks = () => {
         return;
       }
       setImage(file);
-      setPreview(URL.createObjectURL(file)); // Create a preview URL
+      setPreview(URL.createObjectURL(file));
       setError("");
     }
   };
@@ -109,10 +110,34 @@ const AddBooks = () => {
           border: "1px solid #e0e0e0",
           background: "rgba(255, 255, 255, 0.9)",
           backdropFilter: "blur(10px)",
+          position: "relative", // Required for positioning the back button
         }}
       >
+        {/* Back to Home Button */}
+        <Button
+          startIcon={
+            <ArrowBackIosNewIcon sx={{ fontSize: "14px !important" }} />
+          }
+          onClick={() => navigate("/")}
+          sx={{
+            position: "absolute",
+            top: 24,
+            left: 24,
+            color: "#7e7e66",
+            fontWeight: 700,
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "transparent",
+              color: "#6a6a56",
+              textDecoration: "underline",
+            },
+          }}
+        >
+          Back to Home
+        </Button>
+
         {/* Header */}
-        <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Box sx={{ textAlign: "center", mb: 4, mt: { xs: 4, md: 0 } }}>
           <AutoStoriesIcon sx={{ fontSize: 48, color: "#7e7e66", mb: 1 }} />
           <Typography
             variant="h4"

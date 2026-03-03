@@ -9,24 +9,21 @@ import {
   Avatar,
   Tooltip,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../src/Actions/auth.action";
-import { useNavigate, useLocation } from "react-router-dom"; // Added useLocation
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const { user, token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation(); // Hook to get current path
+  const location = useLocation();
 
   // Define which paths should NOT have a navbar
   const hideNavbarPaths = ["/login", "/SignUp", "/signup"];
 
-  // If the current path is in our list, don't render anything
   if (hideNavbarPaths.includes(location.pathname)) {
     return null;
   }
@@ -78,6 +75,7 @@ const Navbar = () => {
           px: { xs: 2, md: 5 },
         }}
       >
+        {/* Brand Logo */}
         <Typography
           variant="h4"
           sx={{
@@ -92,6 +90,7 @@ const Navbar = () => {
           Homee
         </Typography>
 
+        {/* Navigation Links */}
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 4 }}>
           <Box sx={navItemStyle}>
             About <KeyboardArrowDownIcon fontSize="small" />
@@ -105,27 +104,8 @@ const Navbar = () => {
           <Box sx={navItemStyle}>Staff</Box>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          <IconButton
-            sx={{ color: "white", opacity: 0.8, "&:hover": { opacity: 1 } }}
-          >
-            <SearchIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            sx={{ color: "white", opacity: 0.8, "&:hover": { opacity: 1 } }}
-          >
-            <ShoppingCartCheckoutIcon fontSize="small" />
-          </IconButton>
-
-          <Box
-            sx={{
-              width: "1px",
-              height: "24px",
-              backgroundColor: "rgba(255,255,255,0.3)",
-              mx: 1,
-            }}
-          />
-
+        {/* User Actions */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           {token ? (
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Tooltip title="Logout">
@@ -155,7 +135,7 @@ const Navbar = () => {
                 color: "#7e7e66",
                 fontWeight: 800,
                 borderRadius: "12px",
-                px: 3,
+                px: 4,
                 textTransform: "none",
                 "&:hover": { backgroundColor: "#f0f0f0" },
               }}

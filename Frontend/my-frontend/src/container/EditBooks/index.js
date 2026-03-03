@@ -8,7 +8,6 @@ import {
   Paper,
   IconButton,
   Grid,
-  Fade,
   Avatar,
   InputAdornment,
 } from "@mui/material";
@@ -57,13 +56,13 @@ const EditBooks = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // No alert needed: Dispatching update and navigating back
     await dispatch(updateBooks(allBooks._id, formData));
     navigate("/getBooks");
   };
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fdfdfc", pb: 8 }}>
-      {/* Editorial Header */}
       <Box
         sx={{
           background: "linear-gradient(135deg, #7e7e66 0%, #454538 100%)",
@@ -71,7 +70,7 @@ const EditBooks = () => {
           pb: 12,
           textAlign: "center",
           color: "white",
-          mb: -10, // Pulls the form up over the banner
+          mb: -10,
         }}
       >
         <Container maxWidth="md">
@@ -87,7 +86,7 @@ const EditBooks = () => {
             Refine Your Collection
           </Typography>
           <Typography sx={{ opacity: 0.8, fontStyle: "italic" }}>
-            Updating: "{formData.title || "Library Entry"}"
+            Currently Editing: {formData.title || "Library Entry"}
           </Typography>
         </Container>
       </Box>
@@ -118,7 +117,6 @@ const EditBooks = () => {
         >
           <form onSubmit={handleSubmit}>
             <Grid container spacing={4}>
-              {/* Image Preview Section */}
               <Grid
                 item
                 xs={12}
@@ -153,7 +151,6 @@ const EditBooks = () => {
                 </Box>
               </Grid>
 
-              {/* Form Fields */}
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -235,7 +232,7 @@ const EditBooks = () => {
                   value={formData.image}
                   onChange={handleChange}
                   variant="standard"
-                  helperText="Paste the new image link to update the preview above"
+                  helperText="Updating the link updates the preview above"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -269,14 +266,19 @@ const EditBooks = () => {
                     transition: "all 0.3s ease",
                   }}
                 >
-                  Confirm Changes
+                  Save Changes
                 </Button>
                 <Button
                   fullWidth
                   onClick={() => navigate("/getBooks")}
-                  sx={{ mt: 2, color: "#7e7e66", textTransform: "none" }}
+                  sx={{
+                    mt: 2,
+                    color: "#7e7e66",
+                    textTransform: "none",
+                    fontWeight: 600,
+                  }}
                 >
-                  Cancel and Return
+                  Discard and Return
                 </Button>
               </Grid>
             </Grid>
